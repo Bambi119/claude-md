@@ -67,7 +67,7 @@ install_agent "agents/FRONTEND.md"      "frontend-pixel.md"
 install_agent "agents/VALIDATOR.md"     "validator-monami.md"
 
 # ── 슬래시 명령어 설치 ────────────────────────────────────
-for f in handoff.md resume.md; do
+for f in end.md start.md; do
     cp "$TMPDIR_INSTALL/repo/commands/$f" "$COMMANDS_DIR/$f"
     echo "[설치] $f → $COMMANDS_DIR"
 done
@@ -79,6 +79,6 @@ unset GITHUB_PAT
 echo ""
 echo "설치 완료!"
 echo "Claude Code를 재시작하면 에이전트와 슬래시 명령어가 활성화됩니다."
-echo "  /handoff — 세션 종료 전 저장"
-echo "  /resume  — 세션 시작 시 맥락 복원"
+echo "  /end   — 세션 종료 전 저장"
+echo "  /start — 세션 시작 시 맥락 복원"
 echo ""
