@@ -2,16 +2,16 @@
 
 ## 실행 순서
 
-### 1. handoff/ 폴더 확인
-프로젝트 루트에 handoff/ 폴더가 없으면 생성한다.
+### 1. 01_handoff/ 폴더 확인
+프로젝트 루트에 01_handoff/ 폴더가 없으면 생성한다.
 폴더를 새로 만든 경우, 이전 기록이 없음을 안내하고 "새 프로젝트로 시작합니다." 라고 말한 뒤 종료한다.
 
 ### 2. 파일 읽기
 다음 순서로 읽는다. 없는 파일은 건너뛴다:
-1. handoff/context.md — 중요 맥락·주의사항
-2. handoff/decisions.md — 주요 결정 사항
-3. handoff/progress.md — 완료된 작업 내역
-4. handoff/next-task.md — 다음 할 작업
+1. 01_handoff/context.md — 중요 맥락·주의사항
+2. 01_handoff/decisions.md — 주요 결정 사항
+3. 01_handoff/progress.md — 완료된 작업 내역
+4. 01_handoff/next-task.md — 다음 할 작업
 
 ### 3. 현황 보고
 읽은 내용을 바탕으로 아래 형식으로 보고한다.

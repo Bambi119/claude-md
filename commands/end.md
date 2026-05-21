@@ -2,30 +2,30 @@
 
 ## 실행 순서
 
-### 1. handoff/ 폴더 확인
-프로젝트 루트에 handoff/ 폴더가 없으면 생성한다.
+### 1. 01_handoff/ 폴더 확인
+프로젝트 루트에 01_handoff/ 폴더가 없으면 생성한다.
 
 ### 2. 파일 저장 (4개)
 
-**handoff/progress.md** — 누적 기록 (날짜별 append)
+**01_handoff/progress.md** — 누적 기록 (날짜별 append)
 오늘 날짜 헤더와 함께 아래를 추가한다:
 - 완료된 기능 목록
 - 수정된 문제 목록
 - 완료된 검수 결과
 
-**handoff/decisions.md** — 누적 기록 (날짜별 append)
+**01_handoff/decisions.md** — 누적 기록 (날짜별 append)
 오늘 날짜 헤더와 함께 아래를 추가한다:
 - 어떤 결정을 했는지
 - 왜 그 결정을 했는지 (# WHY: 포함)
 - 고려했다가 버린 대안
 
-**handoff/next-task.md** — 덮어쓰기
+**01_handoff/next-task.md** — 덮어쓰기
 다음 세션에서 바로 시작할 작업 목록 (우선순위 순):
 - 가장 먼저 할 작업
 - 순서대로 이어질 작업들
 - 해결 안 된 문제나 막힌 것
 
-**handoff/context.md** — 덮어쓰기
+**01_handoff/context.md** — 덮어쓰기
 반드시 기억해야 할 중요 맥락:
 - 반복되는 문제 패턴
 - 프로젝트 특이사항 및 주의점
