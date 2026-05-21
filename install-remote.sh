@@ -18,16 +18,13 @@ CLAUDE_DIR="$HOME/.claude"
 AGENTS_DIR="$CLAUDE_DIR/agents"
 COMMANDS_DIR="$CLAUDE_DIR/commands"
 
-# ── PAT 수신 ──────────────────────────────────────────────
+# ── PAT 수신 (선택) ───────────────────────────────────────
+# Public 저장소는 PAT 없이도 동작합니다.
+# Private 저장소이거나 rate limit 우회가 필요할 때만 입력하세요.
 if [ -z "${GITHUB_PAT:-}" ]; then
     echo ""
-    read -r -s -p "GitHub PAT를 입력하세요 (입력 내용은 화면에 표시되지 않습니다): " GITHUB_PAT
+    read -r -s -p "GitHub PAT (없으면 Enter 그냥 누르기): " GITHUB_PAT
     echo ""
-fi
-
-if [ -z "$GITHUB_PAT" ]; then
-    echo "오류: PAT가 입력되지 않았습니다." >&2
-    exit 1
 fi
 
 # ── 저장소 클론 ───────────────────────────────────────────
@@ -35,8 +32,14 @@ echo ""
 echo "=== Claude Code 원격 설치 ==="
 echo "저장소 다운로드 중..."
 
+if [ -n "${GITHUB_PAT:-}" ]; then
+    CLONE_URL="https://${GITHUB_PAT}@github.com/${REPO}.git"
+else
+    CLONE_URL="https://github.com/${REPO}.git"
+fi
+
 git clone --quiet --depth 1 --branch "$BRANCH" \
-    "https://${GITHUB_PAT}@github.com/${REPO}.git" \
+    "$CLONE_URL" \
     "$TMPDIR_INSTALL/repo"
 
 # ── 디렉터리 생성 ─────────────────────────────────────────
