@@ -6,9 +6,10 @@
 
 $ErrorActionPreference = "Stop"
 
-$ClaudeDir  = "$env:USERPROFILE\.claude"
-$AgentsDir  = "$ClaudeDir\agents"
-$RepoRoot   = $PSScriptRoot
+$ClaudeDir   = "$env:USERPROFILE\.claude"
+$AgentsDir   = "$ClaudeDir\agents"
+$CommandsDir = "$ClaudeDir\commands"
+$RepoRoot    = $PSScriptRoot
 
 Write-Host ""
 Write-Host "=== Claude Code 전역 설정 설치 ===" -ForegroundColor Cyan
@@ -16,8 +17,9 @@ Write-Host "설치 경로: $ClaudeDir"
 Write-Host ""
 
 # 1. 디렉터리 생성
-if (-not (Test-Path $ClaudeDir))  { New-Item -ItemType Directory -Path $ClaudeDir  | Out-Null }
-if (-not (Test-Path $AgentsDir))  { New-Item -ItemType Directory -Path $AgentsDir  | Out-Null }
+if (-not (Test-Path $ClaudeDir))   { New-Item -ItemType Directory -Path $ClaudeDir   | Out-Null }
+if (-not (Test-Path $AgentsDir))   { New-Item -ItemType Directory -Path $AgentsDir   | Out-Null }
+if (-not (Test-Path $CommandsDir)) { New-Item -ItemType Directory -Path $CommandsDir | Out-Null }
 
 # 2. CLAUDE.md 설치 (기존 파일 백업)
 $Target = "$ClaudeDir\CLAUDE.md"
@@ -44,7 +46,18 @@ foreach ($f in $AgentFiles) {
     Write-Host "[설치] $($f.dest) -> $AgentsDir" -ForegroundColor Green
 }
 
+# 4. 슬래시 명령어 설치
+$CommandFiles = @("handoff.md", "resume.md")
+foreach ($f in $CommandFiles) {
+    $Src  = Join-Path $RepoRoot "commands\$f"
+    $Dest = Join-Path $CommandsDir $f
+    Copy-Item $Src $Dest -Force
+    Write-Host "[설치] $f -> $CommandsDir" -ForegroundColor Green
+}
+
 Write-Host ""
 Write-Host "설치 완료!" -ForegroundColor Cyan
-Write-Host "Claude Code를 재시작하면 에이전트가 활성화됩니다."
+Write-Host "Claude Code를 재시작하면 에이전트와 슬래시 명령어가 활성화됩니다."
+Write-Host "  /handoff — 세션 종료 전 저장"
+Write-Host "  /resume  — 세션 시작 시 맥락 복원"
 Write-Host ""

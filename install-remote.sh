@@ -16,6 +16,7 @@ BRANCH="main"
 TMPDIR_INSTALL="$(mktemp -d)"
 CLAUDE_DIR="$HOME/.claude"
 AGENTS_DIR="$CLAUDE_DIR/agents"
+COMMANDS_DIR="$CLAUDE_DIR/commands"
 
 # ── PAT 수신 ──────────────────────────────────────────────
 if [ -z "${GITHUB_PAT:-}" ]; then
@@ -41,6 +42,7 @@ git clone --quiet --depth 1 --branch "$BRANCH" \
 # ── 디렉터리 생성 ─────────────────────────────────────────
 mkdir -p "$CLAUDE_DIR"
 mkdir -p "$AGENTS_DIR"
+mkdir -p "$COMMANDS_DIR"
 
 # ── CLAUDE.md 설치 ────────────────────────────────────────
 TARGET="$CLAUDE_DIR/CLAUDE.md"
@@ -64,11 +66,19 @@ install_agent "agents/BACKEND.md"       "backend-sigma.md"
 install_agent "agents/FRONTEND.md"      "frontend-pixel.md"
 install_agent "agents/VALIDATOR.md"     "validator-monami.md"
 
+# ── 슬래시 명령어 설치 ────────────────────────────────────
+for f in handoff.md resume.md; do
+    cp "$TMPDIR_INSTALL/repo/commands/$f" "$COMMANDS_DIR/$f"
+    echo "[설치] $f → $COMMANDS_DIR"
+done
+
 # ── 정리 ──────────────────────────────────────────────────
 rm -rf "$TMPDIR_INSTALL"
 unset GITHUB_PAT
 
 echo ""
 echo "설치 완료!"
-echo "Claude Code를 재시작하면 에이전트가 활성화됩니다."
+echo "Claude Code를 재시작하면 에이전트와 슬래시 명령어가 활성화됩니다."
+echo "  /handoff — 세션 종료 전 저장"
+echo "  /resume  — 세션 시작 시 맥락 복원"
 echo ""
