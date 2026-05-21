@@ -47,7 +47,7 @@ foreach ($f in $AgentFiles) {
 }
 
 # 4. 슬래시 명령어 설치
-$CommandFiles = @("end.md", "start.md")
+$CommandFiles = @("end.md", "start.md", "new.md")
 foreach ($f in $CommandFiles) {
     $Src  = Join-Path $RepoRoot "commands\$f"
     $Dest = Join-Path $CommandsDir $f
@@ -58,6 +58,7 @@ foreach ($f in $CommandFiles) {
 Write-Host ""
 Write-Host "설치 완료!" -ForegroundColor Cyan
 Write-Host "Claude Code를 재시작하면 에이전트와 슬래시 명령어가 활성화됩니다."
-Write-Host "  /end   — 세션 종료 전 저장"
+Write-Host "  /new   — GitHub 최신 설정 업데이트 + 프로젝트 초기화"
 Write-Host "  /start — 세션 시작 시 맥락 복원"
+Write-Host "  /end   — 세션 종료 전 저장"
 Write-Host ""

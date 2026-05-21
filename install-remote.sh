@@ -20,8 +20,8 @@ COMMANDS_DIR="$CLAUDE_DIR/commands"
 
 # ── PAT 수신 (선택) ───────────────────────────────────────
 # Public 저장소는 PAT 없이도 동작합니다.
-# Private 저장소이거나 rate limit 우회가 필요할 때만 입력하세요.
-if [ -z "${GITHUB_PAT:-}" ]; then
+# 터미널에서 직접 실행할 때만 프롬프트가 표시됩니다.
+if [ -z "${GITHUB_PAT:-}" ] && [ -t 0 ]; then
     echo ""
     read -r -s -p "GitHub PAT (없으면 Enter 그냥 누르기): " GITHUB_PAT
     echo ""
@@ -70,7 +70,7 @@ install_agent "agents/FRONTEND.md"      "frontend-pixel.md"
 install_agent "agents/VALIDATOR.md"     "validator-monami.md"
 
 # ── 슬래시 명령어 설치 ────────────────────────────────────
-for f in end.md start.md; do
+for f in end.md start.md new.md; do
     cp "$TMPDIR_INSTALL/repo/commands/$f" "$COMMANDS_DIR/$f"
     echo "[설치] $f → $COMMANDS_DIR"
 done
@@ -82,6 +82,7 @@ unset GITHUB_PAT
 echo ""
 echo "설치 완료!"
 echo "Claude Code를 재시작하면 에이전트와 슬래시 명령어가 활성화됩니다."
-echo "  /end   — 세션 종료 전 저장"
+echo "  /new   — GitHub 최신 설정 업데이트 + 프로젝트 초기화"
 echo "  /start — 세션 시작 시 맥락 복원"
+echo "  /end   — 세션 종료 전 저장"
 echo ""
