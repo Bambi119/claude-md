@@ -4,24 +4,26 @@
 
 1. `agents/ORCHESTRATOR.md` 규칙 로드 (없으면 `~/.claude/agents/orchestrator-sita.md`)
 2. `01_handoff/queue/` 폴더가 없으면 하위 4개 디렉토리 생성
-3. **이 세션의 tmux pane 기록** — 큐 감시기(queue-watcher)가 이 창을 깨울 수 있도록:
-   ```bash
-   [ -n "$TMUX_PANE" ] && echo "$TMUX_PANE" > 01_handoff/.manager-pane
-   ```
-4. **기획서 로드**: `01_handoff/plan.md`를 읽는다
+3. **기획서 로드**: `01_handoff/plan.md`를 읽는다
    - 있으면 → 프로젝트 목표·기능 명세·범위를 파악한 상태로 시작
    - 없으면 → 사용자와 기획 대화를 먼저 진행하고 `plan.md`를 생성한 뒤 다음 단계로
-5. `01_handoff/queue/ready/`와 `01_handoff/queue/approvals/`에 미처리 파일 있는지 확인
+4. `01_handoff/queue/ready/`와 `01_handoff/queue/approvals/`에 미처리 파일 있는지 확인
    - `report_*.json`이 있으면 → 기획서와 대조 검토 후 자연어로 번역하여 보고 (ORCHESTRATOR.md 2단계)
    - 없으면 → 대기
-6. 완료 후 한 줄 보고:
+5. 완료 후 한 줄 보고:
    "관리 세션 시작. 기획서를 확인했습니다. 개발팀 보고서를 기다리고 있습니다."
 
-## 보고서 자동 수신
+## 자동 반복 — `/loop`
 
-별도 Monitor를 띄우지 않는다. 개발 세션이 보고서를 투입하면
-**큐 감시기(`queue-watcher.sh`)가 이 창에 `/manager`를 입력해 자동으로 깨운다.**
-깨어나면 위 5단계부터 다시 실행되어 보고서를 처리한다.
+관리 세션을 자동화하려면 관리 창에서 **한 번만** 입력한다:
 
-> 큐 감시기가 실행 중이어야 자동 수신이 동작한다.
-> 프로젝트 폴더에서 `bash 01_handoff/queue-watcher.sh` 로 띄워 둔다.
+```
+/loop 5m /manager
+```
+
+→ 5분마다 `/manager` 절차가 자동 실행되어 `ready/`의 보고서를 확인한다.
+→ 개발 세션이 보고서를 투입하면, 다음 주기에 시타가 스스로 받아 기획서 대조·자연어 브리핑을 한다.
+→ 사용자가 관리 창을 직접 깨울 필요가 없다.
+
+> `/loop`는 이 세션 안에서 도는 자체 반복이라 tmux·psmux 같은 멀티플렉서와 무관하다.
+> 세션 창을 닫으면 멈춘다. 루프는 7일 후 만료되므로 장기 운영 시 다시 걸어 준다.
