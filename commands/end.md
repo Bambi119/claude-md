@@ -14,7 +14,7 @@
 last_updated: YYYY-MM-DDTHH:MM
 active_task: task_NNN (현재 진행 중인 task_id, 없으면 none)
 last_commit: (git rev-parse --short HEAD 결과)
-session_count: N
+session_count: N  (dev.md에서 이미 +1 갱신됨 — 이 값 그대로 유지, 재증가 금지)
 
 ## Step Status
 - sigma: pending | in_progress | passing
@@ -24,6 +24,7 @@ session_count: N
 ## Next Action
 [step_status 기준으로 passing이 아닌 첫 스텝을 명시.
  예: sigma pending → "시그마 — {goal}"
+     sigma failed → "시그마 재실행 (이전 모나미 FAIL 결과 참고)"
      sigma passing, pixel pending → "픽셀 — {goal} 재개"
      전체 passing → "모나미 검수 결과 대기 중"]
 

@@ -153,6 +153,10 @@ while ($true) {
 | {task_id} | {task} | completed | {YYYY-MM-DD} |
 ```
 
+**개발 세션에서 FAIL 보고가 오면** (progress.md에 `sigma: failed` 또는 `pixel: failed` 감지):
+- registry의 해당 task_id status는 `in_progress` 유지 (재작업 완료 후 `completed` 갱신)
+- next-task 재발행하지 않음 — 재작업은 개발 세션 내에서 처리됨
+
 파일이 없으면 헤더와 함께 새로 생성:
 
 ```markdown

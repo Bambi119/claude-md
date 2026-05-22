@@ -6,8 +6,8 @@
 
 `01_handoff/progress.md`가 있으면 읽는다:
 - `active_task`가 현재 처리할 next-task의 task_id와 일치하면 → `Step Status` 확인
-  - `sigma: passing` → 시그마 건너뜀
-  - `pixel: passing` → 픽셀 건너뜀
+  - **`passing`인 스텝만 건너뜀.** `pending` · `in_progress` · `failed` 상태는 모두 실행한다
+  - 예: `sigma: passing` → 시그마 건너뜀 / `sigma: failed` → 시그마 재실행 (이전 모나미 FAIL 결과 참고)
 - `active_task`가 다른 task_id이면 → Step Status 무시, 새 작업으로 처리
 
 `01_handoff/_registry.md`가 있으면 읽는다:
