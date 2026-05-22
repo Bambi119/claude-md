@@ -6,11 +6,11 @@
 # 이 스크립트는 상주하며 큐 폴더를 감시하다가, 새 파일이 오면
 # 해당 tmux 창에 슬래시 명령을 입력해 깨운다.
 #
-# ── 사용법 (tmux 세션 안의 아무 pane에서) ──────────────────
-#   bash queue-watcher.sh <프로젝트폴더> [<프로젝트폴더2> ...]
-#   예) bash queue-watcher.sh /c/projectA /c/projectB
+# ── 사용법 (psmux/tmux 세션 안의 아무 pane에서) ────────────
+#   bash queue-watcher.sh                   ← 인자 없이: 열린 창들에서 자동 탐지
+#   bash queue-watcher.sh <폴더> [<폴더2>]   ← 또는 폴더를 직접 지정
 #
-#   감시 주기 변경: WATCH_INTERVAL=3 bash queue-watcher.sh ...
+#   감시 주기 변경: WATCH_INTERVAL=3 bash queue-watcher.sh
 #
 # ── 동작 전제 ──────────────────────────────────────────────
 #   각 세션은 시작 시 자기 tmux pane을 아래 파일에 기록한다:
@@ -22,12 +22,20 @@
 set -u
 INTERVAL="${WATCH_INTERVAL:-5}"
 
-if [ "$#" -eq 0 ]; then
-    echo "사용법: bash queue-watcher.sh <프로젝트폴더> [<프로젝트폴더2> ...]"
-    exit 1
+# 감시할 프로젝트 폴더 결정 — 인자로 받거나, 없으면 열린 pane에서 자동 탐지
+if [ "$#" -gt 0 ]; then
+    PROJECTS=("$@")
+else
+    mapfile -t PROJECTS < <(tmux list-panes -a -F '#{pane_current_path}' 2>/dev/null | sort -u)
+    if [ "${#PROJECTS[@]}" -eq 0 ]; then
+        echo "감시할 폴더를 찾지 못했습니다."
+        echo "사용법: bash queue-watcher.sh [<폴더> ...]"
+        echo "(psmux/tmux 세션 안에서 실행하면 인자 없이 자동 탐지합니다)"
+        exit 1
+    fi
+    echo "열린 창에서 ${#PROJECTS[@]}개 폴더를 탐지했습니다 (01_handoff 없는 폴더는 자동 제외)."
 fi
 
-PROJECTS=("$@")
 declare -A LAST   # 중복 깨움 방지: 키별 마지막으로 알린 파일
 
 echo "큐 감시 시작 — 프로젝트 ${#PROJECTS[@]}개, ${INTERVAL}초 주기. (Ctrl+C 로 중단)"
