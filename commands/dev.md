@@ -55,9 +55,13 @@
    - 시그마 완료 → `sigma: passing`
    - 픽셀 완료 → `pixel: passing`
 6. 모나미 검수 → report.json 투입 → `monami: passing`
-7. 처리한 next-task 파일을 `processing/` → `01_handoff/queue/done/`으로 이동
+7. 처리한 **next-task 파일만** `processing/` → `01_handoff/queue/done/`으로 이동한다.
+   ⚠️ **report.json은 절대 옮기지 않는다 — `ready/`에 그대로 둔다.**
+   매니저가 `ready/`에서 보고서를 읽고 `done/`으로 옮기는 것이 규칙이다.
+   데브가 보고서를 미리 치우면 매니저(와 큐 감시기)가 보고서를 영영 못 본다.
 8. `ready/`에 또 다른 `next-task_*.json`이 남아 있으면 → 2단계를 처음부터 다시 실행
    (FIFO로 다음 작업 처리). 없으면 → 3단계로 이동
+   (※ `ready/`에 report.json이 남아 있는 것은 정상이다 — 데브는 next-task만 신경 쓴다)
 
 ### 3. next-task가 없으면 — 대기
 
