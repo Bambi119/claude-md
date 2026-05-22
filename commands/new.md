@@ -119,7 +119,7 @@ cat > .claude/settings.json << 'EOF'
         "hooks": [
           {
             "type": "command",
-            "command": "pwsh -NoProfile -NonInteractive -Command \"if ((Test-Path '.claude/dev-active') -and (-not (Get-ChildItem '01_handoff/queue/ready/report_*.json' -ErrorAction SilentlyContinue))) { exit 2 }\""
+            "command": "sh -c 'if [ -f \".claude/dev-active\" ] && ! ls 01_handoff/queue/ready/report_*.json 2>/dev/null 1>/dev/null; then exit 2; fi'"
           }
         ]
       }
