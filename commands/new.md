@@ -68,7 +68,28 @@ cat > 01_handoff/_registry.md << 'EOF'
 EOF
 ```
 
-### 3. Stop 훅 설치 (개발 세션 보호)
+### 3. 슬래시 명령어 전역 등록
+
+아래 명령어를 실행하여 모든 슬래시 명령어를 `~/.claude/commands/`에 설치한다:
+
+```bash
+for cmd in new start end manager dev; do
+  cp "C:/09_백업/03_claudeMD/commands/${cmd}.md" "$HOME/.claude/commands/${cmd}.md" 2>/dev/null || \
+  curl -s "https://raw.githubusercontent.com/Bambi119/claude-md/main/commands/${cmd}.md" \
+       -o "$HOME/.claude/commands/${cmd}.md"
+done
+```
+
+> 로컬 백업 경로가 있으면 복사, 없으면 GitHub에서 직접 다운로드한다.
+
+설치 확인:
+```bash
+ls ~/.claude/commands/ | grep -E "new|start|end|manager|dev"
+```
+
+5개 파일이 모두 확인되면 계속 진행한다.
+
+### 4. Stop 훅 설치 (개발 세션 보호)
 
 `.claude/settings.json`이 없으면 아래 내용으로 생성한다:
 
@@ -99,5 +120,5 @@ EOF
 아래 내용을 한국어로 간략히 보고한다:
 - 업데이트 성공 여부
 - 설치된 에이전트: 시타·시그마·픽셀·모나미
-- 사용 가능한 명령어: /new /start /end
+- 사용 가능한 명령어: /new /start /end /manager /dev
 - 폴더 구조: 01_handoff/queue/ 하위 4개 디렉토리 준비 완료
