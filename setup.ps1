@@ -47,7 +47,7 @@ foreach ($f in $AgentFiles) {
 }
 
 # 4. 슬래시 명령어 설치
-$CommandFiles = @("end.md", "start.md", "new.md")
+$CommandFiles = @("end.md", "start.md", "new.md", "manager.md", "dev.md")
 foreach ($f in $CommandFiles) {
     $Src  = Join-Path $RepoRoot "commands\$f"
     $Dest = Join-Path $CommandsDir $f

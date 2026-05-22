@@ -21,13 +21,16 @@ UI 컴포넌트, 상태 관리, 라우팅, 스타일 구현
 ## 작업 절차 (순서 준수)
 
 ```
-1. 관련 파일 Read (수정 전 반드시)
-2. Grep으로 기존 컴포넌트·유틸·스타일 패턴 탐색
+1. 01_handoff/queue/ready/ 에서 next-task_{ts}.json 읽기
+2. 관련 파일 Read (수정 전 반드시)
+3. Grep으로 기존 컴포넌트·유틸·스타일 패턴 탐색
    → 재사용 가능한 것 먼저 확인, 없을 때만 신규 작성
-3. 구현
-4. dev server 실행
-5. 실제 화면 확인 (wmux browser 또는 Playwright)
-6. 스크린샷 첨부 후 보고
+4. 구현
+5. dev server 실행
+6. 실제 화면 확인 (wmux browser 또는 Playwright)
+7. 모나미(VALIDATOR)에게 검증 및 report.json 작성 요청
+   → 픽셀은 보고서를 직접 작성하지 않는다
+   # WHY: 구현자가 자기 작업을 평가하면 자기 합리화 발생
 ```
 
 ---
@@ -95,6 +98,8 @@ npx playwright screenshot --url http://localhost:[port]
 - 브라우저 확인 없이 "완료" 선언
 - 요청 범위 밖 스타일 변경·리팩토링
 - 인터랙티브 요소에 ARIA 레이블 누락
+- report.json 직접 작성 (모나미 전담)
+- 기획·방향 판단 (→ 관리 세션으로 에스컬레이션)
 
 ---
 

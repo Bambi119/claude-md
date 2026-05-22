@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "handoff-report-v1",
+  "title": "개발 세션 완료 보고서",
+  "description": "개발 세션이 작업 완료 시 ready/ 디렉토리에 작성. 관리 세션이 자동 감지 후 자연어 번역.",
+  "type": "object",
+  "required": ["ts", "task_id", "task", "status", "impact"],
+  "properties": {
+    "ts": {
+      "type": "string",
+      "pattern": "^[0-9]{8}_[0-9]{6}$",
+      "description": "타임스탬프 (YYYYMMDD_HHMMSS)",
+      "example": "20260522_143012"
+    },
+    "task_id": {
+      "type": "string",
+      "description": "next-task.schema.json의 task_id와 매칭 (decision, next-task 파일과 동일한 값 사용)",
+      "example": "task_001"
+    },
+    "task": {
+      "type": "string",
+      "description": "작업 이름 (한 줄)",
+      "example": "로그인 속도 개선"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["completed", "failed", "partial", "blocked"],
+      "description": "완료: completed / 실패: failed / 일부완료: partial / 블록: blocked"
+    },
+    "impact": {
+      "type": "object",
+      "required": ["user_visible"],
+      "description": "사용자 영향 — 번역 에이전트가 이 필드만 읽어 자연어 생성",
+      "properties": {
+        "user_visible": {
+          "type": "string",
+          "description": "사용자가 체감하는 변화 (기술 용어 금지)",
+          "example": "로그인 시간이 1.2초에서 0.3초로 빨라집니다"
+        },
+        "irreversible": {
+          "type": ["string", "null"],
+          "description": "되돌릴 수 없는 변경 (없으면 null)",
+          "example": "기존 세션 토큰이 모두 만료됩니다 (재로그인 필요)"
+        },
+        "side_effects": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "부수 영향 목록",
+          "example": ["첫 실행 시 캐시 초기화", "구형 브라우저 미지원"]
+        }
+      }
+    },
+    "tech_detail": {
+      "type": "object",
+      "description": "기술 상세 — 관리 세션에서 '더 알아보기' 선택 시에만 노출",
+      "properties": {
+        "files_changed": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "변경된 파일 목록"
+        },
+        "tests": {
+          "type": "object",
+          "properties": {
+            "passed": { "type": "integer" },
+            "failed": { "type": "integer" },
+            "skipped": { "type": "integer" }
+          }
+        },
+        "errors": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "에러/경고 로그 (status가 failed/partial일 때)"
+        },
+        "next_required": {
+          "type": ["string", "null"],
+          "description": "다음 단계 필요 작업 (있으면 기재)"
+        }
+      }
+    }
+  }
+}

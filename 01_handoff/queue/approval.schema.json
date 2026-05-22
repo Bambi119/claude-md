@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "handoff-approval-v1",
+  "title": "관리 세션 승인·결정 파일",
+  "description": "관리 세션이 사용자 결정 수집 후 approvals/ 디렉토리에 작성. 개발 세션이 다음 작업 시작 전 읽음. ※ 01_handoff/decisions.md는 세션 간 결정 히스토리 누적 파일(별개).",
+  "type": "object",
+  "required": ["ts", "ref_report_ts", "task_id", "decision"],
+  "properties": {
+    "ts": {
+      "type": "string",
+      "pattern": "^[0-9]{8}_[0-9]{6}$",
+      "description": "결정 타임스탬프",
+      "example": "20260522_143025"
+    },
+    "ref_report_ts": {
+      "type": "string",
+      "description": "참조한 보고서의 ts 값 (추적용)",
+      "example": "20260522_143012"
+    },
+    "task_id": {
+      "type": "string",
+      "description": "작업 식별자 — report.schema.json 및 next-task.schema.json의 task_id와 동일한 값",
+      "example": "task_001"
+    },
+    "decision": {
+      "type": "string",
+      "enum": ["approved", "revise", "hold", "cancel"],
+      "description": "승인: approved / 수정: revise / 보류: hold / 취소: cancel"
+    },
+    "instruction": {
+      "type": ["string", "null"],
+      "description": "revise일 때 수정 지시 (자연어). 나머지는 null.",
+      "example": "로그인 후 메인 화면이 아니라 대시보드로 이동하게 바꿔주세요"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["immediate", "next", "backlog"],
+      "default": "next",
+      "description": "즉시: immediate / 다음 작업 후: next / 나중에: backlog"
+    }
+  }
+}
