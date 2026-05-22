@@ -35,7 +35,34 @@ bash <(curl -s https://raw.githubusercontent.com/Bambi119/claude-md/main/install
 mkdir -p 01_handoff/queue/ready 01_handoff/queue/processing 01_handoff/queue/approvals 01_handoff/queue/done
 ```
 
-### 3. 완료 보고
+### 3. Stop 훅 설치 (개발 세션 보호)
+
+`.claude/settings.json`이 없으면 아래 내용으로 생성한다:
+
+```bash
+mkdir -p .claude
+cat > .claude/settings.json << 'EOF'
+{
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoProfile -NonInteractive -Command \"if ((Test-Path '.claude/dev-active') -and (-not (Get-ChildItem '01_handoff/queue/ready/report_*.json' -ErrorAction SilentlyContinue))) { exit 2 }\""
+          }
+        ]
+      }
+    ]
+  }
+}
+EOF
+```
+
+이미 `.claude/settings.json`이 있으면 건너뛴다.
+
+### 4. 완료 보고
 아래 내용을 한국어로 간략히 보고한다:
 - 업데이트 성공 여부
 - 설치된 에이전트: 시타·시그마·픽셀·모나미

@@ -75,6 +75,11 @@ go test ./...
 검증 통과 후 아래 형식으로 report.json을 작성하여  
 `01_handoff/queue/ready/report_{ts}_{task_id}.json`에 저장한다.
 
+저장 직후 dev-active 마커를 삭제한다 (Stop 훅 해제):
+```bash
+rm -f .claude/dev-active
+```
+
 ### impact 필드 작성 기준
 
 | 필드 | 작성 방법 |

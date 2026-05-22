@@ -118,12 +118,20 @@ while ($true) {
   "task_id": "task_NNN",
   "task": "작업 이름",
   "goal": "사용자 언어로 기술한 작업 목표",
+  "parallel": false,
   "details": ["세부 항목 1", "세부 항목 2"],
   "conditions": ["완료 조건 1", "완료 조건 2"],
   "cautions": ["주의 사항 — 있으면"],
   "ref_approval_ts": "참조한 approval의 ts"
 }
 ```
+
+**`parallel` 필드 사용 기준**
+
+| 값 | 상황 |
+|----|------|
+| `false` (기본값) | 프론트가 백엔드 API 결과에 의존 / 순서 보장 필요 |
+| `true` | 백엔드·프론트가 서로 독립적인 작업 (예: API 설계 + 화면 레이아웃 동시 작업) |
 
 ---
 
