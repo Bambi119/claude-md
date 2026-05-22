@@ -8,14 +8,13 @@
    - 있으면 즉시 자연어로 번역하여 보고
 4. PowerShell Monitor를 **백그라운드 Bash**로 실행하여 `ready/` 감시 시작
 
-```powershell
-$dir = ".\01_handoff\queue\ready"
-while ($true) {
-    $f = Get-ChildItem "$dir\*.json" -ErrorAction SilentlyContinue |
-         Sort-Object LastWriteTime | Select-Object -First 1
-    if ($f) { Write-Output "REPORT:$($f.FullName)" }
-    Start-Sleep 3
-}
+```bash
+dir="./01_handoff/queue/ready"
+while true; do
+    f=$(ls -t "$dir"/*.json 2>/dev/null | head -1)
+    if [ -n "$f" ]; then echo "REPORT:$f"; fi
+    sleep 3
+done
 ```
 
 5. 완료 후 한 줄 보고:

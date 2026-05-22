@@ -129,7 +129,44 @@ cat > .claude/settings.json << 'EOF'
 EOF
 ```
 
-이미 `.claude/settings.json`이 있으면 건너뛴다.
+`.claude/settings.json`이 이미 있고 `pwsh`가 포함되어 있으면 **강제 덮어쓴다** (구버전 Stop Hook 교체):
+```bash
+if [ -f .claude/settings.json ] && grep -q "pwsh" .claude/settings.json; then
+  echo "구버전 Stop Hook 감지 — 재작성합니다."
+  cat > .claude/settings.json << 'SETTINGS_JSON'
+{
+  "permissions": {
+    "allow": [
+      "Bash(bash *)",
+      "Bash(curl *)",
+      "Bash(pwsh *)",
+      "Bash(powershell *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(rm -f *)",
+      "Bash(cat *)",
+      "Bash(ls *)",
+      "Bash(git *)"
+    ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'if [ -f \".claude/dev-active\" ] && ! ls 01_handoff/queue/ready/report_*.json 2>/dev/null 1>/dev/null; then exit 2; fi'"
+          }
+        ]
+      }
+    ]
+  }
+}
+SETTINGS_JSON
+fi
+```
 
 ### 4. 완료 보고
 아래 내용을 한국어로 간략히 보고한다:

@@ -36,18 +36,17 @@ tools: Read, Write, Glob
 
 ### 1단계: Monitor 실행 (세션 시작 시 상시)
 
-아래 PowerShell 스크립트를 **백그라운드 Bash**로 실행한다.  
+아래 셸 스크립트를 **백그라운드 Bash**로 실행한다.  
 (`run_in_background: true` — 대화 흐름 차단 방지)
 
-```powershell
-# 관리 세션 시작 시 실행 — ready/ 감시
-$dir = ".\01_handoff\queue\ready"
-while ($true) {
-    $f = Get-ChildItem "$dir\*.json" -ErrorAction SilentlyContinue |
-         Sort-Object LastWriteTime | Select-Object -First 1
-    if ($f) { Write-Output "REPORT:$($f.FullName)" }
-    Start-Sleep 3
-}
+```bash
+# 관리 세션 시작 시 실행 — ready/ 감시 (Windows·Linux·SSH 공용)
+dir="./01_handoff/queue/ready"
+while true; do
+    f=$(ls -t "$dir"/*.json 2>/dev/null | head -1)
+    if [ -n "$f" ]; then echo "REPORT:$f"; fi
+    sleep 3
+done
 ```
 
 → 백그라운드 프로세스가 `REPORT:경로`를 출력하면 **2단계** 즉시 실행  
