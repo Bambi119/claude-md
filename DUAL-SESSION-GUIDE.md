@@ -92,9 +92,10 @@ Claude 창은 한 번 잠들면 스스로 깨어나지 못한다. 큐 감시기(
 tmux 세션의 빈 pane에서 한 번 실행한다:
 
 ```bash
-bash queue-watcher.sh <프로젝트경로>
-# 여러 프로젝트 동시 감시:
-bash queue-watcher.sh /c/projectA /c/projectB
+bash ~/.claude/queue-watcher.sh
+# 인자 없이 실행하면 열린 창들에서 프로젝트를 자동 탐지한다.
+# 특정 폴더만 감시하려면 경로를 직접 지정:
+bash ~/.claude/queue-watcher.sh /c/projectA /c/projectB
 ```
 
 > 큐 감시기를 띄우지 않으면 매니저·데브가 서로 자동으로 깨우지 못한다.

@@ -56,6 +56,10 @@ foreach ($f in $CommandFiles) {
     Write-Host "[설치] $f -> $CommandsDir" -ForegroundColor Green
 }
 
+# 5. 큐 감시기 설치
+Copy-Item (Join-Path $RepoRoot "queue-watcher.sh") (Join-Path $ClaudeDir "queue-watcher.sh") -Force
+Write-Host "[설치] queue-watcher.sh -> $ClaudeDir" -ForegroundColor Green
+
 Write-Host ""
 Write-Host "설치 완료!" -ForegroundColor Cyan
 Write-Host "Claude Code를 재시작하면 에이전트와 슬래시 명령어가 활성화됩니다."

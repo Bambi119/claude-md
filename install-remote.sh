@@ -76,6 +76,10 @@ for f in new.md start.md end.md manager.md dev.md; do
     echo "[설치] $f → $COMMANDS_DIR"
 done
 
+# ── 큐 감시기 설치 ────────────────────────────────────────
+cp "$TMPDIR_INSTALL/repo/queue-watcher.sh" "$CLAUDE_DIR/queue-watcher.sh"
+echo "[설치] queue-watcher.sh → $CLAUDE_DIR"
+
 # ── 정리 ──────────────────────────────────────────────────
 rm -rf "$TMPDIR_INSTALL"
 unset GITHUB_PAT

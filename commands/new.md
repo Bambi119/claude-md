@@ -82,12 +82,20 @@ done
 
 > 로컬 백업 경로가 있으면 복사, 없으면 GitHub에서 직접 다운로드한다.
 
+이어서 **큐 감시기**를 `~/.claude/`에 설치한다:
+```bash
+cp "C:/09_백업/03_claudeMD/queue-watcher.sh" "$HOME/.claude/queue-watcher.sh" 2>/dev/null || \
+curl -s "https://raw.githubusercontent.com/Bambi119/claude-md/main/queue-watcher.sh" \
+     -o "$HOME/.claude/queue-watcher.sh"
+```
+
 설치 확인:
 ```bash
 ls ~/.claude/commands/ | grep -E "new|start|end|manager|dev"
+ls ~/.claude/queue-watcher.sh
 ```
 
-5개 파일이 모두 확인되면 계속 진행한다.
+5개 명령어 + 큐 감시기가 모두 확인되면 계속 진행한다.
 
 ### 4. 권한 설정 + 구버전 Stop 훅 제거
 

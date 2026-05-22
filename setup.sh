@@ -51,6 +51,10 @@ for f in new.md start.md end.md manager.md dev.md; do
     echo "[설치] $f -> $COMMANDS_DIR"
 done
 
+# 5. 큐 감시기 설치
+cp "$REPO_ROOT/queue-watcher.sh" "$CLAUDE_DIR/queue-watcher.sh"
+echo "[설치] queue-watcher.sh -> $CLAUDE_DIR"
+
 echo ""
 echo "설치 완료!"
 echo "Claude Code를 재시작하면 에이전트와 슬래시 명령어가 활성화됩니다."
