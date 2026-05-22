@@ -13,7 +13,7 @@
 **세션 재시작 복원**: `active_task`가 있고 Step Status에 미완료 스텝(`pending`·`in_progress`·`failed`)이 남아 있으면
 → 진행 중이던 작업이다. 그 next-task 파일은 `01_handoff/queue/processing/`에 있다.
 → `processing/next-task_*.json`을 읽어 **2단계의 3~8번을 이어서 실행**한다
-   (1번 파일 이동은 이미 끝남 — 건너뜀 / `.claude/dev-active`가 없으면 재생성).
+   (1번 파일 이동은 이미 끝남 — 건너뜀).
 
 `01_handoff/_registry.md`가 있으면 읽는다:
 - 해당 task_id의 status가 `completed`이면 → 작업 전체 건너뜀. "이미 완료된 작업입니다. 다음 next-task를 기다립니다." 출력 후 3단계로 이동
@@ -36,7 +36,7 @@
    [ -n "$f" ] && mv "$f" 01_handoff/queue/processing/
    ```
    이후 단계는 `processing/`으로 옮긴 이 파일을 대상으로 진행한다.
-2. `.claude/dev-active` 생성, `progress.md` 상단 갱신:
+2. `progress.md` 상단 갱신:
    ```
    active_task: {task_id}
    session_count: 이전값 + 1
@@ -49,7 +49,7 @@
 5. 각 에이전트 완료 직후 `progress.md` Step Status 갱신:
    - 시그마 완료 → `sigma: passing`
    - 픽셀 완료 → `pixel: passing`
-6. 모나미 검수 → report.json 투입 → `monami: passing` → `.claude/dev-active` 삭제
+6. 모나미 검수 → report.json 투입 → `monami: passing`
 7. 처리한 next-task 파일을 `processing/` → `01_handoff/queue/done/`으로 이동
 8. **작업 완료 후 멈추지 말고 곧바로 3단계(감시 대기)로 이동**
 

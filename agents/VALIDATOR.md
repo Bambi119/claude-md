@@ -75,11 +75,6 @@ go test ./...
 검증 통과 후 아래 형식으로 report.json을 작성하여  
 `01_handoff/queue/ready/report_{ts}_{task_id}.json`에 저장한다.
 
-저장 직후 dev-active 마커를 삭제한다 (Stop 훅 해제):
-```bash
-rm -f .claude/dev-active
-```
-
 ### impact 필드 작성 기준
 
 | 필드 | 작성 방법 |
@@ -128,11 +123,10 @@ FAIL 판정
   → progress.md의 실패 원인 에이전트 스텝을 failed로 갱신:
      시그마 원인 → sigma: failed
      픽셀 원인   → pixel: failed
-     (세션 재시작 시 해당 스텝을 다시 실행하도록 보장)
-  → .claude/dev-active 유지 (삭제하지 않음 — Stop 훅이 세션 재시작을 차단)
+     (세션 재시작 시 dev.md 0단계가 failed 스텝을 다시 실행한다)
   → 시그마(백엔드) 또는 픽셀(프론트엔드) 재작업 요청
   → 재작업 완료 후 해당 스텝 status를 passing으로 갱신 (재작업 에이전트가 직접 갱신)
-  → 재검증 후 PASS 되면 report.json 작성 + .claude/dev-active 삭제
+  → 재검증 후 PASS 되면 report.json 작성
   → PASS 될 때까지 루프
 ```
 

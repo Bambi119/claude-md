@@ -89,7 +89,7 @@ ls ~/.claude/commands/ | grep -E "new|start|end|manager|dev"
 
 5개 파일이 모두 확인되면 계속 진행한다.
 
-### 4. Stop 훅 설치 (개발 세션 보호)
+### 4. 권한 설정 + 구버전 Stop 훅 제거
 
 `.claude/settings.json`이 없으면 아래 내용으로 생성한다:
 
@@ -111,64 +111,19 @@ cat > .claude/settings.json << 'EOF'
       "Bash(ls *)",
       "Bash(git *)"
     ]
-  },
-  "hooks": {
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "sh -c 'if [ -f \".claude/dev-active\" ] && ! ls 01_handoff/queue/ready/report_*.json 2>/dev/null 1>/dev/null; then exit 2; fi'"
-          }
-        ]
-      }
-    ]
   }
 }
 EOF
 ```
 
-`.claude/settings.json`이 이미 있고 `pwsh`가 포함되어 있으면 **강제 덮어쓴다** (구버전 Stop Hook 교체):
-```bash
-if [ -f .claude/settings.json ] && grep -q "pwsh" .claude/settings.json; then
-  echo "구버전 Stop Hook 감지 — 재작성합니다."
-  cat > .claude/settings.json << 'SETTINGS_JSON'
-{
-  "permissions": {
-    "allow": [
-      "Bash(bash *)",
-      "Bash(curl *)",
-      "Bash(pwsh *)",
-      "Bash(powershell *)",
-      "Bash(mkdir *)",
-      "Bash(cp *)",
-      "Bash(mv *)",
-      "Bash(rm -f *)",
-      "Bash(cat *)",
-      "Bash(ls *)",
-      "Bash(git *)"
-    ]
-  },
-  "hooks": {
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "sh -c 'if [ -f \".claude/dev-active\" ] && ! ls 01_handoff/queue/ready/report_*.json 2>/dev/null 1>/dev/null; then exit 2; fi'"
-          }
-        ]
-      }
-    ]
-  }
-}
-SETTINGS_JSON
-fi
-```
+`.claude/settings.json`이 **이미 있으면** 아래를 처리한다:
 
-### 4. 완료 보고
+1. 파일을 Read한다.
+2. `hooks` 항목에 `Stop` 훅이 있으면 (특히 `dev-active`를 감지하는 명령) → **`hooks` 항목 전체를 제거**한다.
+   > 구버전 잔재다. 데브 세션을 무한 루프에 빠뜨린다. `permissions` 등 나머지 설정은 그대로 보존한다.
+3. `permissions.allow`에 위 11개 권한이 빠져 있으면 추가한다.
+
+### 5. 완료 보고
 아래 내용을 한국어로 간략히 보고한다:
 - 업데이트 성공 여부
 - 설치된 에이전트: 시타·시그마·픽셀·모나미
