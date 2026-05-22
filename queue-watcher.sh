@@ -40,11 +40,14 @@ declare -A LAST   # 중복 깨움 방지: 키별 마지막으로 알린 파일
 
 echo "큐 감시 시작 — 프로젝트 ${#PROJECTS[@]}개, ${INTERVAL}초 주기. (Ctrl+C 로 중단)"
 
+# 창을 깨운다. 성공 시 0, 실패 시 1 반환.
 wake() {
     local pane_file="$1" cmd="$2" pane
-    pane=$(cat "$pane_file" 2>/dev/null) || return
-    [ -n "$pane" ] || return
-    tmux send-keys -t "$pane" "$cmd" Enter 2>/dev/null
+    [ -f "$pane_file" ] || return 1
+    # 파일에서 pane ID를 읽되 CR/LF/공백을 모두 제거 (줄바꿈 혼입 방지)
+    pane=$(tr -d '\r\n\t ' < "$pane_file" 2>/dev/null)
+    [ -n "$pane" ] || return 1
+    tmux send-keys -t "$pane" "$cmd" Enter
 }
 
 while true; do
@@ -57,8 +60,11 @@ while true; do
         nt=$(ls -tr "$ready"/next-task_*.json 2>/dev/null | head -1)
         if [ -n "$nt" ]; then
             if [ "${LAST[dev_$i]:-}" != "$nt" ]; then
-                wake "$proj/01_handoff/.dev-pane" "/dev"
-                echo "[$(date +%H:%M:%S)] 데브 깨움 ← $(basename "$nt")"
+                if wake "$proj/01_handoff/.dev-pane" "/dev"; then
+                    echo "[$(date +%H:%M:%S)] 데브 깨움 ← $(basename "$nt")"
+                else
+                    echo "[$(date +%H:%M:%S)] 데브 깨움 실패 — .dev-pane 확인 필요 ($proj)"
+                fi
                 LAST[dev_$i]="$nt"
             fi
         else
@@ -69,8 +75,11 @@ while true; do
         rp=$(ls -tr "$ready"/report_*.json 2>/dev/null | head -1)
         if [ -n "$rp" ]; then
             if [ "${LAST[mgr_$i]:-}" != "$rp" ]; then
-                wake "$proj/01_handoff/.manager-pane" "/manager"
-                echo "[$(date +%H:%M:%S)] 매니저 깨움 ← $(basename "$rp")"
+                if wake "$proj/01_handoff/.manager-pane" "/manager"; then
+                    echo "[$(date +%H:%M:%S)] 매니저 깨움 ← $(basename "$rp")"
+                else
+                    echo "[$(date +%H:%M:%S)] 매니저 깨움 실패 — .manager-pane 확인 필요 ($proj)"
+                fi
                 LAST[mgr_$i]="$rp"
             fi
         else
