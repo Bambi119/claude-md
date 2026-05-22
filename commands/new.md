@@ -97,6 +97,21 @@ ls ~/.claude/commands/ | grep -E "new|start|end|manager|dev"
 mkdir -p .claude
 cat > .claude/settings.json << 'EOF'
 {
+  "permissions": {
+    "allow": [
+      "Bash(bash *)",
+      "Bash(curl *)",
+      "Bash(pwsh *)",
+      "Bash(powershell *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(rm -f *)",
+      "Bash(cat *)",
+      "Bash(ls *)",
+      "Bash(git *)"
+    ]
+  },
   "hooks": {
     "Stop": [
       {
