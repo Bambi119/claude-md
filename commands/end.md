@@ -7,7 +7,31 @@
 
 ### 2. 파일 저장 (4개)
 
-**01_handoff/progress.md** — 누적 기록 (날짜별 append)
+**01_handoff/progress.md** — 상단 헤더 덮어쓰기 + `---` 이하 날짜별 append
+
+**상단 헤더 (항상 덮어쓰기, 50줄 이하 유지):**
+```
+last_updated: YYYY-MM-DDTHH:MM
+active_task: task_NNN (현재 진행 중인 task_id, 없으면 none)
+last_commit: (git rev-parse --short HEAD 결과)
+session_count: N
+
+## Step Status
+- sigma: pending | in_progress | passing
+- pixel: pending | in_progress | passing
+- monami: pending | in_progress | passing
+
+## Next Action
+[step_status 기준으로 passing이 아닌 첫 스텝을 명시.
+ 예: sigma pending → "시그마 — {goal}"
+     sigma passing, pixel pending → "픽셀 — {goal} 재개"
+     전체 passing → "모나미 검수 결과 대기 중"]
+
+## Blockers
+[막힌 것 또는 "없음"]
+```
+
+**`---` 이하 세션 기록 (날짜별 append):**
 오늘 날짜 헤더와 함께 아래를 추가한다:
 - 완료된 기능 목록
 - 수정된 문제 목록

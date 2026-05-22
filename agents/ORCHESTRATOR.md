@@ -92,8 +92,10 @@ while ($true) {
 
 **[✅ 승인]** 선택 시:
 1. approval.json 작성 → `01_handoff/queue/approvals/`
-2. next-task.json 작성 → `01_handoff/queue/ready/` (다음 작업)
-3. 보고서 파일 → `01_handoff/queue/done/`으로 이동
+2. `01_handoff/_registry.md`에서 완료된 task_id를 `completed`로 갱신
+3. 다음 작업의 task_id가 registry에 이미 `completed`이면 next-task 발행 금지 — 사용자에게 재확인
+4. next-task.json 작성 → `01_handoff/queue/ready/` (다음 작업)
+5. 보고서 파일 → `01_handoff/queue/done/`으로 이동
 
 **[✏️ 수정 요청]** 선택 시:
 1. 사용자에게 수정 내용을 자연어로 받는다
@@ -132,6 +134,35 @@ while ($true) {
 |----|------|
 | `false` (기본값) | 프론트가 백엔드 API 결과에 의존 / 순서 보장 필요 |
 | `true` | 백엔드·프론트가 서로 독립적인 작업 (예: API 설계 + 화면 레이아웃 동시 작업) |
+
+---
+
+### 5단계: _registry.md 관리
+
+저장 위치: `01_handoff/_registry.md`
+
+**승인(approved) 처리 완료 시** 아래 행을 추가한다:
+
+```markdown
+| {task_id} | {task} | in_progress | {YYYY-MM-DD} |
+```
+
+**개발 세션에서 report.json이 들어오고 승인이 완료되면** status를 `completed`로 갱신:
+
+```markdown
+| {task_id} | {task} | completed | {YYYY-MM-DD} |
+```
+
+파일이 없으면 헤더와 함께 새로 생성:
+
+```markdown
+# Task Registry
+
+| task_id | task | status | date |
+|---------|------|--------|------|
+```
+
+**next-task 발행 전 반드시 확인**: 해당 task_id가 이미 `completed`이면 재발행 금지.
 
 ---
 

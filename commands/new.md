@@ -35,6 +35,39 @@ bash <(curl -s https://raw.githubusercontent.com/Bambi119/claude-md/main/install
 mkdir -p 01_handoff/queue/ready 01_handoff/queue/processing 01_handoff/queue/approvals 01_handoff/queue/done
 ```
 
+`01_handoff/progress.md`가 없으면 초기 파일 생성:
+```bash
+cat > 01_handoff/progress.md << 'EOF'
+last_updated: (오늘 날짜)
+active_task: none
+last_commit: none
+session_count: 0  # 초기값. 첫 /dev 실행 시 1로 갱신됨
+
+## Step Status
+- sigma: pending
+- pixel: pending
+- monami: pending
+
+## Next Action
+관리 세션에서 첫 next-task를 발행하세요.
+
+## Blockers
+없음
+
+---
+EOF
+```
+
+`01_handoff/_registry.md`가 없으면 초기 파일 생성:
+```bash
+cat > 01_handoff/_registry.md << 'EOF'
+# Task Registry
+
+| task_id | task | status | date |
+|---------|------|--------|------|
+EOF
+```
+
 ### 3. Stop 훅 설치 (개발 세션 보호)
 
 `.claude/settings.json`이 없으면 아래 내용으로 생성한다:
