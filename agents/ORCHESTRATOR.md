@@ -55,23 +55,13 @@ tools: Read, Write, Glob
 
 ## 관리 세션 작업 흐름
 
-### 1단계: Monitor 실행 (세션 시작 시 상시)
+### 1단계: 보고서 수신 경로
 
-아래 셸 스크립트를 **백그라운드 Bash**로 실행한다.  
-(`run_in_background: true` — 대화 흐름 차단 방지)
+개발 세션의 보고서(`report_*.json`)는 **큐 감시기(`queue-watcher.sh`)**가 감지하여
+이 관리 세션 창을 자동으로 깨운다 (창에 `/manager` 입력). 깨어나면 곧바로 2단계를 실행한다.
 
-```bash
-# 관리 세션 시작 시 실행 — ready/ 감시 (Windows·Linux·SSH 공용)
-dir="./01_handoff/queue/ready"
-while true; do
-    f=$(ls -t "$dir"/*.json 2>/dev/null | head -1)
-    if [ -n "$f" ]; then echo "REPORT:$f"; fi
-    sleep 3
-done
-```
-
-→ 백그라운드 프로세스가 `REPORT:경로`를 출력하면 **2단계** 즉시 실행  
-→ 실행 후 Monitor 도구로 해당 프로세스 출력을 감시한다
+세션 시작 시 별도 Monitor를 띄울 필요 없다 — 큐 감시기가 그 역할을 전담한다.
+큐 감시기는 사용자가 tmux 세션에서 한 번 실행해 둔다 (저장소 루트의 `queue-watcher.sh`).
 
 ---
 

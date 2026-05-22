@@ -4,6 +4,11 @@
 
 ### 0. 진행 상태 확인 (세션 재시작 대비) — 항상 먼저 실행
 
+**이 세션의 tmux pane 기록** — 큐 감시기(queue-watcher)가 이 창을 깨울 수 있도록:
+```bash
+[ -n "$TMUX_PANE" ] && echo "$TMUX_PANE" > 01_handoff/.dev-pane
+```
+
 `01_handoff/progress.md`가 있으면 읽는다:
 - `active_task`가 현재 처리할 next-task의 task_id와 일치하면 → `Step Status` 확인
   - **`passing`인 스텝만 건너뜀.** `pending` · `in_progress` · `failed` 상태는 모두 실행한다
@@ -51,27 +56,20 @@
    - 픽셀 완료 → `pixel: passing`
 6. 모나미 검수 → report.json 투입 → `monami: passing`
 7. 처리한 next-task 파일을 `processing/` → `01_handoff/queue/done/`으로 이동
-8. **작업 완료 후 멈추지 말고 곧바로 3단계(감시 대기)로 이동**
+8. `ready/`에 또 다른 `next-task_*.json`이 남아 있으면 → 2단계를 처음부터 다시 실행
+   (FIFO로 다음 작업 처리). 없으면 → 3단계로 이동
 
-### 3. next-task가 없으면 — 감시 대기
+### 3. next-task가 없으면 — 대기
 
 `ready/`에 처리할 `next-task_*.json`이 없으면 (세션 시작 시점이든, 2단계 작업을 막 끝낸 직후든):
 
-1. 출력: "대기 중. 관리 세션에서 다음 작업이 오면 자동으로 시작합니다."
-2. 아래 스크립트를 **백그라운드 Bash**로 실행한다 (`run_in_background: true` — 세션이 잠들지 않도록):
+- 출력: "대기 중. 큐 감시기(queue-watcher)가 새 작업이 오면 이 창을 깨웁니다."
+- 별도 감시 루프를 띄우지 않는다. 여기서 세션 응답을 마친다.
 
-```bash
-dir="./01_handoff/queue/ready"
-while true; do
-    f=$(ls -tr "$dir"/next-task_*.json 2>/dev/null | head -1)
-    if [ -n "$f" ]; then echo "TASK:$f"; fi
-    sleep 3
-done
-```
+## 작업 자동 수신
 
-3. Monitor 도구로 위 백그라운드 프로세스의 출력을 감시한다
-4. `TASK:경로`가 출력되면 → **2단계를 즉시 실행** (새 next-task 자동 픽업)
-5. 픽업 후 작업이 끝나면 다시 이 3단계로 돌아와 감시를 계속한다
+데브 세션은 잠들어도 된다. 관리 세션이 next-task를 발행하면
+**큐 감시기(`queue-watcher.sh`)가 이 창에 `/dev`를 입력해 자동으로 깨운다.**
+깨어나면 0단계부터 다시 실행되어 새 작업을 픽업한다.
 
-> 이 감시 루프 덕분에 사용자가 데브 창을 직접 깨울 필요가 없다.
-> 매니저가 작업을 발행하는 즉시 데브 세션이 스스로 픽업한다.
+> 큐 감시기가 실행 중이어야 자동 수신이 동작한다. (저장소 루트의 `queue-watcher.sh` 참조)

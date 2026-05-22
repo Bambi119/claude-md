@@ -3,3 +3,7 @@
 
 # 로컬 전용 권한 설정 (자동 누적 — 저장소에 불필요)
 .claude/settings.local.json
+
+# 세션 런타임 — tmux pane 기록 (큐 감시기 연동)
+01_handoff/.manager-pane
+01_handoff/.dev-pane
