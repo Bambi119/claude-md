@@ -35,6 +35,15 @@ bash <(curl -s https://raw.githubusercontent.com/Bambi119/claude-md/main/install
 mkdir -p 01_handoff/queue/ready 01_handoff/queue/processing 01_handoff/queue/approvals 01_handoff/queue/done
 ```
 
+**큐 감시기를 프로젝트에 설치** — 홈 폴더(`~`)는 bash마다 다르므로,
+watcher를 프로젝트 안(`01_handoff/`)에 둬서 경로 혼란을 없앤다:
+```bash
+cp "C:/09_백업/03_claudeMD/queue-watcher.sh" 01_handoff/queue-watcher.sh 2>/dev/null || \
+curl -s "https://raw.githubusercontent.com/Bambi119/claude-md/main/queue-watcher.sh" \
+     -o 01_handoff/queue-watcher.sh
+```
+이후 감시기 실행은 **프로젝트 폴더에서** `bash 01_handoff/queue-watcher.sh` 한 줄이면 된다.
+
 `01_handoff/progress.md`가 없으면 초기 파일 생성:
 ```bash
 cat > 01_handoff/progress.md << 'EOF'

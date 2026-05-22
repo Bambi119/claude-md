@@ -89,15 +89,18 @@
 
 Claude 창은 한 번 잠들면 스스로 깨어나지 못한다. 큐 감시기(`queue-watcher.sh`)가
 폴더를 상주 감시하다가 새 파일이 오면 해당 창을 깨운다.
-tmux 세션의 빈 pane에서 한 번 실행한다:
+`/new`가 감시기를 프로젝트의 `01_handoff/`에 설치한다.
+psmux 세션의 빈 pane에서, 프로젝트 폴더로 이동해 한 번 실행한다:
 
 ```bash
-bash ~/.claude/queue-watcher.sh
-# 인자 없이 실행하면 열린 창들에서 프로젝트를 자동 탐지한다.
-# 특정 폴더만 감시하려면 경로를 직접 지정:
-bash ~/.claude/queue-watcher.sh /c/projectA /c/projectB
+cd <프로젝트폴더>
+bash 01_handoff/queue-watcher.sh
 ```
 
+> 경로에 홈(`~`)을 쓰지 않는다 — `~`는 bash마다 다른 곳을 가리켜 혼란을 일으킨다.
+> 감시기는 프로젝트 폴더 기준 상대경로(`01_handoff/queue-watcher.sh`)로만 실행한다.
+> 인자 없이 실행하면 psmux의 열린 창들에서 다른 프로젝트도 자동 탐지한다.
+>
 > 큐 감시기를 띄우지 않으면 매니저·데브가 서로 자동으로 깨우지 못한다.
 > 그 경우 각 창에 사용자가 직접 `/manager`·`/dev`를 입력해 깨워야 한다.
 > 매니저·데브 세션은 시작 시 자기 tmux pane을 `01_handoff/.manager-pane`·
