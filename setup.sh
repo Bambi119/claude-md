@@ -45,7 +45,8 @@ install_agent "agents/FRONTEND.md"      "frontend-pixel.md"
 install_agent "agents/VALIDATOR.md"     "validator-monami.md"
 
 # 4. 슬래시 명령어 설치
-for f in end.md start.md new.md; do
+# ※ 명령어 목록 변경 시 install-remote.sh · setup.ps1 · commands/new.md 도 함께 수정
+for f in new.md start.md end.md manager.md dev.md; do
     cp "$REPO_ROOT/commands/$f" "$COMMANDS_DIR/$f"
     echo "[설치] $f -> $COMMANDS_DIR"
 done
@@ -53,7 +54,9 @@ done
 echo ""
 echo "설치 완료!"
 echo "Claude Code를 재시작하면 에이전트와 슬래시 명령어가 활성화됩니다."
-echo "  /new   — GitHub 최신 설정 업데이트 + 프로젝트 초기화"
-echo "  /start — 세션 시작 시 맥락 복원"
-echo "  /end   — 세션 종료 전 저장"
+echo "  /new     — GitHub 최신 설정 업데이트 + 프로젝트 초기화"
+echo "  /manager — 관리 세션 시작 (시타)"
+echo "  /dev     — 개발 세션 시작 (시그마·픽셀·모나미)"
+echo "  /start   — 재시작 시 맥락 복원"
+echo "  /end     — 컨텍스트 저장 후 세션 종료"
 echo ""

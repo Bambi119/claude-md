@@ -1,5 +1,5 @@
 # Obsidian 앱 설정 (저장소 불필요)
 .obsidian/
 
-# 개발 세션 런타임 마커 (Stop 훅 연동)
-.claude/dev-active
+# 로컬 전용 권한 설정 (자동 누적 — 저장소에 불필요)
+.claude/settings.local.json

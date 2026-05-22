@@ -70,6 +70,7 @@ install_agent "agents/FRONTEND.md"      "frontend-pixel.md"
 install_agent "agents/VALIDATOR.md"     "validator-monami.md"
 
 # ── 슬래시 명령어 설치 ────────────────────────────────────
+# ※ 명령어 목록 변경 시 setup.ps1 · setup.sh · commands/new.md 도 함께 수정
 for f in new.md start.md end.md manager.md dev.md; do
     cp "$TMPDIR_INSTALL/repo/commands/$f" "$COMMANDS_DIR/$f"
     echo "[설치] $f → $COMMANDS_DIR"

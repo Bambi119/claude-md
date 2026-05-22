@@ -45,7 +45,7 @@
 ```
 01_handoff/queue/
 ├── ready/        ← 개발→관리: 보고서(report) + 관리→개발: 지시서(next-task) 투입
-├── processing/   ← 관리 세션이 처리 중인 파일 (중복 처리 방지)
+├── processing/   ← 개발 세션이 픽업한 next-task 보관 (중복 픽업 방지)
 ├── approvals/    ← 관리→개발: 승인/결정 파일
 └── done/         ← 처리 완료 보관
 ```
@@ -68,18 +68,22 @@
     │ ② 모나미 검수 + report.json 작성     │
     │ ③ ready/report_{ts}_{id}.json 투입  │
     │                          ──감지──→  │ ④ Monitor 자동 감지
-    │                                      │ ⑤ processing/으로 이동
-    │                                      │ ⑥ 자연어 브리핑 생성
-    │                                      │ ⑦ 사용자에게 선택지 제시
-    │                                      │ ⑧ approvals/ 에 결정 기록
-    │                                      │ ⑨ next-task_{ts}.json 작성
-    │ ← approvals/ 확인 (작업 시작 전)    │ ⑩ 보고서 → done/
-    │ ⑪ 결정에 따라 다음 작업 실행        │
+    │                                      │ ⑤ 기획서 대조 + 자연어 브리핑
+    │                                      │ ⑥ 사용자에게 선택지 제시
+    │                                      │ ⑦ approvals/ 에 결정 기록
+    │                                      │ ⑧ next-task → ready/ 작성
+    │                                      │ ⑨ 보고서 → done/ 이동
+    │ ⑩ next-task 자동 픽업               │
+    │   (ready→processing, 감시 루프)      │
+    │ ⑪ 결정·지시대로 작업 → 다시 ①      │
 ```
 
 ---
 
 ## 4. 세션별 시작 절차
+
+같은 프로젝트 폴더에서 Claude Code 창 두 개를 연다.
+처음 쓰는 프로젝트면 먼저 `/new`로 폴더 구조와 명령어를 설치한다.
 
 ### 관리 세션 (tmux pane 1)
 
@@ -88,11 +92,8 @@ cd 프로젝트경로
 claude
 ```
 
-첫 메시지:
-```
-너는 시타야. ORCHESTRATOR.md 규칙을 따르고
-Monitor로 01_handoff/queue/ready/ 감시를 시작해.
-```
+창이 열리면 `/manager` 입력
+→ 시타가 기획서(`plan.md`)를 읽고 보고서 감시를 시작한다.
 
 ### 개발 세션 (tmux pane 2)
 
@@ -101,12 +102,9 @@ cd 프로젝트경로
 claude
 ```
 
-첫 메시지:
-```
-너는 개발팀이야. 시그마(백엔드)·픽셀(프론트)·모나미(검수) 역할을 따라.
-01_handoff/queue/ready/ 에 next-task 파일이 있으면 읽고 시작해.
-approvals/ 에 미처리 결정 파일이 있으면 먼저 확인해.
-```
+창이 열리면 `/dev` 입력
+→ 개발팀이 next-task 감시 대기에 들어간다.
+→ 관리 세션이 작업을 발행하면 개발 세션이 **자동으로 픽업**한다.
 
 ---
 

@@ -39,6 +39,8 @@ bash setup.sh
 | 명령어 | 기능 |
 |--------|------|
 | `/new` | GitHub 최신 설정 자동 업데이트 + 프로젝트 초기화 |
+| `/manager` | 관리 세션 시작 — 작업 지시 · 보고서 검토 · 승인 |
+| `/dev` | 개발 세션 시작 — 백엔드 · 프론트 · 검수 실행 |
 | `/start` | 이전 세션 맥락 복원 · 오늘 작업 계획 수립 |
 | `/end` | 현재 세션 저장 · 컨텍스트 초기화 준비 |
 
@@ -48,7 +50,9 @@ bash setup.sh
 
 | 이름 | 역할 |
 |------|------|
-| 시타 (orchestrator) | 분석 · 계획 · 위임 |
+| 시타 (orchestrator) | 기획서 관리 · 작업 지시 · 보고서 대조 검토 |
 | 시그마 (backend) | API · DB · 서비스 구현 |
 | 픽셀 (frontend) | UI 구현 |
-| 모나미 (validator) | 코드 검수 · 보안 점검 |
+| 모나미 (validator) | 코드 검수 · 보안 점검 · 보고서 작성 |
+
+> 이중 세션 운영 방식은 [`DUAL-SESSION-GUIDE.md`](DUAL-SESSION-GUIDE.md) 참조.
